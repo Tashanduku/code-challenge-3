@@ -15,7 +15,7 @@ function fetchAllMovies() {
   fetch(baseURL)
     .then((response) => response.json())
     .then((movies) => {
-      filmList.innerHTML = ""; // Clear the placeholder
+      filmList.innerHTML = ""; 
       movies.forEach((movie) => {
         const movieItem = document.createElement("li");
         movieItem.textContent = movie.title;
@@ -29,3 +29,18 @@ function fetchAllMovies() {
     })
     .catch((error) => console.error("Error fetching movies:", error));
 }
+//  display movie details
+function displayMovieDetails(movie) {
+    filmPoster.src = movie.poster;
+    filmTitle.textContent = movie.title;
+    filmRuntime.textContent = `Runtime: ${movie.runtime} minutes`;
+    filmShowtime.textContent = `Showtime: ${movie.showtime}`;
+    filmDescription.textContent = movie.description;
+    const availableTickets = movie.capacity - movie.tickets_sold;
+    filmTickets.textContent = `Available Tickets: ${availableTickets}`;
+    buyTicketButton.disabled = availableTickets === 0;
+    buyTicketButton.textContent = availableTickets > 0 ? "Buy Ticket" : "Sold Out";
+  
+    
+    buyTicketButton.onclick = () => buyTicket(movie);
+  }
