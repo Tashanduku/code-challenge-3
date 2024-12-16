@@ -44,3 +44,33 @@ function displayMovieDetails(movie) {
     
     buyTicketButton.onclick = () => buyTicket(movie);
   }
+
+//  handle ticket purchase
+function buyTicket(movie) {
+    const availableTickets = movie.capacity - movie.tickets_sold;
+    if (availableTickets > 0) {
+      movie.tickets_sold += 1;
+      displayMovieDetails(movie);
+  
+      
+      fetch(`${baseURL}/${movie.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tickets_sold: movie.tickets_sold }),
+      }).catch((error) => console.error("Error updating tickets:", error));
+    }
+  }
+  
+  // Fetch and display the first movie on page load
+  function fetchFirstMovie() {
+    fetch(`${baseURL}/1`)
+      .then((response) => response.json())
+      .then((movie) => displayMovieDetails(movie))
+      .catch((error) => console.error("Error fetching first movie:", error));
+  }
+  
+  
+  fetchAllMovies();
+  fetchFirstMovie();
