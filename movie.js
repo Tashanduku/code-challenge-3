@@ -12,7 +12,7 @@ fetch(jsonFilePath)
     if (!data || !data.films) {
       throw new Error('Invalid JSON format: Missing "films" key.');
     }
-    initializeApp(data.films); // Initialize the app with the movie data
+    initializeApp(data.films); 
   })
   .catch(error => {
     console.error('Error fetching the JSON file:', error.message);
@@ -38,7 +38,7 @@ function initializeApp(films) {
     filmList.appendChild(filmItem);
   });
 
-  // Show the first film's details on page load (if available)
+  // Show the first film's details on page load 
   if (firstFilm) {
     displayFilmDetails(firstFilm);
   }
@@ -66,8 +66,8 @@ function displayFilmDetails(film) {
   buyButton.onclick = () => {
     if (film.capacity - film.tickets_sold > 0) {
       film.tickets_sold += 1;
-      displayFilmDetails(film); // Refresh the film details
-      updateFilmList(film); // Update the film list
+      displayFilmDetails(film); 
+      updateFilmList(film); 
       alert(`Ticket booked for ${film.title}!`);
     } else {
       alert(`Sorry, no tickets available for ${film.title}.`);
