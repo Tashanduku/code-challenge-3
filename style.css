@@ -130,3 +130,26 @@ main {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+#buy-ticket:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+#buy-ticket:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media screen and (max-width: 768px) {
+    main {
+        flex-direction: column;
+    }
+
+    #film-list, #film-details {
+        flex: 1;
+        max-width: 100%;
+    }
+}
+
+
