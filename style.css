@@ -66,4 +66,67 @@ main {
     transform: scale(1.02);
 }
 
+#films .sold-out {
+    background-color: #ffe0e0;
+    text-decoration: line-through;
+    color: #d9534f;
+    cursor: not-allowed;
+}
+
+#film-details {
+    flex: 2;
+    min-width: 300px;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#film-details h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #4a4e69;
+}
+
+#poster {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#details {
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#details h3 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+#details p {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+}
+
+#buy-ticket {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
 
