@@ -26,4 +26,44 @@ main {
     gap: 2rem;
 }
 
+#film-list {
+    flex: 0;
+    min-width: 250px;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    max-height: 100vh;
+}
+
+#film-list h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #4a4e69;
+}
+
+#films {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#films li {
+    padding: 0.8rem;
+    margin-bottom: 0.8rem;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #e9ecef;
+    transition: all 0.3s ease;
+    text-align: center;
+    font-size: 1rem;
+}
+
+#films li:hover {
+    background-color: #c9c9dd;
+    transform: scale(1.02);
+}
+
 
