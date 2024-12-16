@@ -1,76 +1,87 @@
-const baseURL = "http://localhost:3000/films";
+const jsonFilePath = 'db.json';
 
-// DOM elements
-const filmList = document.querySelector("#films");
-const filmPoster = document.querySelector("#poster");
-const filmTitle = document.querySelector("#title");
-const filmRuntime = document.querySelector("#runtime");
-const filmShowtime = document.querySelector("#showtime");
-const filmDescription = document.querySelector("#description");
-const filmTickets = document.querySelector("#tickets");
-const buyTicketButton = document.querySelector("#buy-ticket");
+// Fetch the movie data from the JSON file and initialize the app
+fetch(jsonFilePath)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (!data || !data.films) {
+      throw new Error('Invalid JSON format: Missing "films" key.');
+    }
+    initializeApp(data.films); // Initialize the app with the movie data
+  })
+  .catch(error => {
+    console.error('Error fetching the JSON file:', error.message);
+  });
 
-//fetch and display all movies
-function fetchAllMovies() {
-  fetch(baseURL)
-    .then((response) => response.json())
-    .then((movies) => {
-      filmList.innerHTML = ""; 
-      movies.forEach((movie) => {
-        const movieItem = document.createElement("li");
-        movieItem.textContent = movie.title;
-        movieItem.classList.add("film", "item");
-        if (movie.capacity - movie.tickets_sold === 0) {
-          movieItem.classList.add("sold-out");
-        }
-        movieItem.addEventListener("click", () => displayMovieDetails(movie));
-        filmList.appendChild(movieItem);
-      });
-    })
-    .catch((error) => console.error("Error fetching movies:", error));
-}
-//  display movie details
-function displayMovieDetails(movie) {
-    filmPoster.src = movie.poster;
-    filmTitle.textContent = movie.title;
-    filmRuntime.textContent = `Runtime: ${movie.runtime} minutes`;
-    filmShowtime.textContent = `Showtime: ${movie.showtime}`;
-    filmDescription.textContent = movie.description;
-    const availableTickets = movie.capacity - movie.tickets_sold;
-    filmTickets.textContent = `Available Tickets: ${availableTickets}`;
-    buyTicketButton.disabled = availableTickets === 0;
-    buyTicketButton.textContent = availableTickets > 0 ? "Buy Ticket" : "Sold Out";
-  
-    
-    buyTicketButton.onclick = () => buyTicket(movie);
+// Initialize the application
+function initializeApp(films) {
+  const filmList = document.querySelector('#films');
+  const firstFilm = films.length > 0 ? films[0] : null;
+
+  // Clear existing list (if any)
+  filmList.innerHTML = '';
+
+  // Populate the film list menu
+  films.forEach(film => {
+    const filmItem = document.createElement('li');
+    filmItem.textContent = film.title;
+    filmItem.className = film.capacity - film.tickets_sold <= 0 ? 'sold-out' : '';
+    filmItem.dataset.id = String(film.id); 
+
+    // Display film details when a film is clicked
+    filmItem.addEventListener('click', () => displayFilmDetails(film));
+    filmList.appendChild(filmItem);
+  });
+
+  // Show the first film's details on page load (if available)
+  if (firstFilm) {
+    displayFilmDetails(firstFilm);
   }
+}
 
-//  handle ticket purchase
-function buyTicket(movie) {
-    const availableTickets = movie.capacity - movie.tickets_sold;
-    if (availableTickets > 0) {
-      movie.tickets_sold += 1;
-      displayMovieDetails(movie);
-  
-      
-      fetch(`${baseURL}/${movie.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ tickets_sold: movie.tickets_sold }),
-      }).catch((error) => console.error("Error updating tickets:", error));
+// Display film details in the film-details section
+function displayFilmDetails(film) {
+  const poster = document.querySelector('#poster');
+  poster.src = film.poster;
+  poster.alt = film.title;
+
+  document.querySelector('#title').textContent = film.title;
+  document.querySelector('#runtime').textContent = `Runtime: ${film.runtime}`;
+  document.querySelector('#showtime').textContent = `Showtime: ${film.showtime}`;
+  document.querySelector('#description').textContent = film.description;
+
+  const availableTickets = film.capacity - film.tickets_sold;
+  document.querySelector('#tickets').textContent = `Available Tickets: ${availableTickets}`;
+
+  const buyButton = document.querySelector('#buy-ticket');
+  buyButton.disabled = availableTickets <= 0;
+  buyButton.textContent = availableTickets <= 0 ? 'Sold Out' : 'Buy Ticket';
+
+  // Add event listener for the "Buy Ticket" button
+  buyButton.onclick = () => {
+    if (film.capacity - film.tickets_sold > 0) {
+      film.tickets_sold += 1;
+      displayFilmDetails(film); // Refresh the film details
+      updateFilmList(film); // Update the film list
+      alert(`Ticket booked for ${film.title}!`);
+    } else {
+      alert(`Sorry, no tickets available for ${film.title}.`);
+    }
+  };
+}
+
+// Update the film list to reflect ticket changes
+function updateFilmList(updatedFilm) {
+  const filmItems = document.querySelectorAll('#films li');
+  filmItems.forEach(filmItem => {
+    if (filmItem.dataset.id === String(updatedFilm.id)) {
+      filmItem.className = updatedFilm.capacity - updatedFilm.tickets_sold <= 0 ? 'sold-out' : '';
     }
   }
-  
-  // Fetch and display the first movie on page load
-  function fetchFirstMovie() {
-    fetch(`${baseURL}/1`)
-      .then((response) => response.json())
-      .then((movie) => displayMovieDetails(movie))
-      .catch((error) => console.error("Error fetching first movie:", error));
-  }
-  
-  
-  fetchAllMovies();
-  fetchFirstMovie();
+)
+}
